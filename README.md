@@ -1,8 +1,7 @@
 # eda-fire-incidents
 
-Aplicação de Algoritmos de Busca e Ordenação
-em Registros de Operações de Vendas da
-Amazon.com.
+Aplicação de Árvores Binárias de Pesquisa -
+ABP para Geração de Relatórios Ordenados.
 
 - 211030863	- Maykon Júnio dos Santos Soares
 - 211041221	- Luan Mateus Cesar Duarte
@@ -10,5 +9,8 @@ Amazon.com.
 - 211031735	- Isaac Lucas Souza Bezerra
 - 211030729	- Eric Rabelo Borges
 
-SelectionSort - Grupo C.
+# Grupo C
+
++ Fonte de dados: Fire Incidents
++ Campo Chave: Latitude + Longitude
 
