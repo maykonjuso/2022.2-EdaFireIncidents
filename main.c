@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
 #define MAX 20000
 
+//nó da árvore binária
 typedef struct NoDeArvore
 {
 
@@ -14,32 +14,7 @@ typedef struct NoDeArvore
 
 } Arvore;
 
-void imprimirLinhas_OrdemCrescente(Arvore *no, long int vetorBytes[], FILE *arquivo)
-{
-
-    int caractere;
-    char linhaFile[850];
-
-    if (no != NULL)
-    {
-        imprimirLinhas_OrdemCrescente(no->esquerda, vetorBytes, arquivo);
-
-        // fseek(arquivo, vetorBytes[no->linha], SEEK_SET);
-
-        // printf ("%s", fgets(linhaFile, sizeof(linhaFile), arquivo));
-        // while ((caractere = fgetc(arquivo)) != '\n'){
-        //     printf ("%c", caractere);
-        // }
-        // printf("\n");
-        imprimirLinha(vetorBytes[no->linha], arquivo);
-
-        if (no->direita != NULL)
-        {
-            imprimirLinhas_OrdemCrescente(no->direita, vetorBytes, arquivo);
-        }
-    }
-}
-
+//função para desalocar o nó
 void removerNos(Arvore *no)
 {
 
@@ -67,6 +42,33 @@ void imprimirLinha(long int numBytes, FILE *arquivo)
     printf("\n");
 }
 
+void imprimirLinhas_OrdemCrescente(Arvore *no, long int vetorBytes[], FILE *arquivo)
+{
+
+    int caractere;
+    char linhaFile[850];
+
+    if (no != NULL)
+    {
+        imprimirLinhas_OrdemCrescente(no->esquerda, vetorBytes, arquivo);
+
+        // fseek(arquivo, vetorBytes[no->linha], SEEK_SET);
+
+        // printf ("%s", fgets(linhaFile, sizeof(linhaFile), arquivo));
+        // while ((caractere = fgetc(arquivo)) != '\n'){
+        //     printf ("%c", caractere);
+        // }
+        // printf("\n");
+        imprimirLinha(vetorBytes[no->linha], arquivo);
+
+        if (no->direita != NULL)
+        {
+            imprimirLinhas_OrdemCrescente(no->direita, vetorBytes, arquivo);
+        }
+    }
+}
+
+//contar quantidade de linhas do arquivo
 int quantidadeDeLinhas(FILE *ptr_para_file)
 {
     int numLinhas = 0, letra;
@@ -82,8 +84,10 @@ int quantidadeDeLinhas(FILE *ptr_para_file)
     return numLinhas;
 }
 
+//criando árvore binária
 Arvore *registrarABP(Arvore *noPai, long int linhaDeLeitura, float SomaLongitude_Latitude)
 {
+    //se o nó atual estiver vazio
     if (noPai == NULL)
     {
         noPai = (Arvore *)malloc(sizeof(Arvore));
@@ -92,10 +96,12 @@ Arvore *registrarABP(Arvore *noPai, long int linhaDeLeitura, float SomaLongitude
         noPai->esquerda = NULL;
         noPai->direita = NULL;
     }
+    //se a chave do nó inserido for menor do que a do atual
     else if (SomaLongitude_Latitude <= noPai->chave)
     {
         noPai->esquerda = registrarABP(noPai->esquerda, linhaDeLeitura, SomaLongitude_Latitude);
     }
+    //se a chave for maior
     else
     {
         noPai->direita = registrarABP(noPai->direita, linhaDeLeitura, SomaLongitude_Latitude);
@@ -125,14 +131,15 @@ int main(void)
     int escolha = 0;
     do
     {
-        printf("Qual opcao deseja realizar?\n\t1 = Carregar arquivo\n\t2 = Imprimir relatorio\n\t3 = Sair do programa\n");
+        printf("Qual opcao deseja realizar?\n\t1 = Carregar arquivo\n\t2 = Imprimir relatorio\n\t3 = Sair do programa\n\n");
         scanf("%d", &escolha);
 
+        //menu de escolha do usuário
         switch (escolha)
         {
         case 1:
-
-            printf("Qual arquivo a ser aberto?\n");
+            //carregar arquivo na ABP
+            printf("\nQual arquivo a ser carregado?\n\n");
 
             scanf("%s", nomeArquivo);
 
@@ -149,7 +156,7 @@ int main(void)
 
             while (fgets(linhaDoArquivo, sizeof(linhaDoArquivo) + 1, csvInfo))
             {
-
+                
                 nBytes = nBytes + strlen(linhaDoArquivo);
                 posLinhaBytes[(localLinha)] = nBytes;
 
@@ -158,13 +165,14 @@ int main(void)
 
                     somaColunas = 0;
 
+                    //armazena todas as colunas até o campo "latitude"
                     linhaSeparada = strtok(linhaDoArquivo, ";");
                     for (int i = 0; i < 16; i++)
                     {
                         linhaSeparada = strtok(NULL, ";");
                     }
                     
-                    // // Comando abaixo chega em Latitude
+                    
 
                     linhaSeparada[2] = '.';
                     somaColunas = strtof(linhaSeparada, NULL);
@@ -174,6 +182,7 @@ int main(void)
                     linhaSeparada[2] = '.';
                     somaColunas += strtof(linhaSeparada, NULL);
 
+                  
                     noPai = registrarABP(noPai, localLinha, somaColunas);
                     localLinha++;
                 }
@@ -184,23 +193,27 @@ int main(void)
                 }
             }
 
+            printf("\nArquivo '%s'carregado com sucesso!\n\n", nomeArquivo);
+          
             break;
 
+
         case 2:
+            //imprime ABP carregado pelo case 1 em ordem crescente
+            printf("\n");
             imprimirLinhas_OrdemCrescente(noPai, posLinhaBytes, csvInfo);
             break;
 
         case 3:
+            //desaloca memória
             removerNos(noPai);
             break;
 
         default:
-            printf("Opcao incorreta");
+            printf("\nOpção Inválida! Tente novamente.\n\n");
             escolha = 0;
             break;
         }
-
-        // Printar - Excluir
 
     } while (escolha == 0 || escolha == 1 || escolha == 2);
 
