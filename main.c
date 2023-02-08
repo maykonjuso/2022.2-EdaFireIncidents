@@ -6,7 +6,6 @@
 //nó da árvore binária
 typedef struct NoDeArvore
 {
-
     float chave;
     int linha;
     struct NoDeArvore *esquerda;
@@ -31,9 +30,9 @@ void removerNos(Arvore *no)
     }
 }
 
+//imprime linha do arquivo
 void imprimirLinha(long int numBytes, FILE *arquivo)
 {
-
     char linhaFile[850];
 
     fseek(arquivo, numBytes, SEEK_SET);
@@ -42,9 +41,9 @@ void imprimirLinha(long int numBytes, FILE *arquivo)
     printf("\n");
 }
 
+//imprime nós da ABP em ordem crescente
 void imprimirLinhas_OrdemCrescente(Arvore *no, long int vetorBytes[], FILE *arquivo)
 {
-
     int caractere;
     char linhaFile[850];
 
@@ -52,13 +51,6 @@ void imprimirLinhas_OrdemCrescente(Arvore *no, long int vetorBytes[], FILE *arqu
     {
         imprimirLinhas_OrdemCrescente(no->esquerda, vetorBytes, arquivo);
 
-        // fseek(arquivo, vetorBytes[no->linha], SEEK_SET);
-
-        // printf ("%s", fgets(linhaFile, sizeof(linhaFile), arquivo));
-        // while ((caractere = fgetc(arquivo)) != '\n'){
-        //     printf ("%c", caractere);
-        // }
-        // printf("\n");
         imprimirLinha(vetorBytes[no->linha], arquivo);
 
         if (no->direita != NULL)
@@ -125,13 +117,17 @@ int main(void)
 
     long int localLinha = 1;
     float somaColunas = 0;
-
+    
     char *linhaSeparada;
-
+  
     int escolha = 0;
+  
+    //flag para checar se algum arquivo já foi ou não aberto
+    int flag = 0;
+    
     do
     {
-        printf("Qual opcao deseja realizar?\n\t1 = Carregar arquivo\n\t2 = Imprimir relatorio\n\t3 = Sair do programa\n\n");
+        printf("Qual opção deseja realizar?\n\t1 = Carregar arquivo\n\t2 = Imprimir relatorio\n\t3 = Sair do programa\n\n");
         scanf("%d", &escolha);
 
         //menu de escolha do usuário
@@ -139,7 +135,7 @@ int main(void)
         {
         case 1:
             //carregar arquivo na ABP
-            printf("\nQual arquivo a ser carregado?\n\n");
+            printf("\nQual arquivo deseja carregar?\n\n");
 
             scanf("%s", nomeArquivo);
 
@@ -149,9 +145,11 @@ int main(void)
                 printf("Erro ao abrir arquivo");
                 exit(1);
             }
-
+          
+            //seta flag como arquivo aberto
+            flag = 1;
+          
             numLinhas = quantidadeDeLinhas(csvInfo);
-
             fseek(csvInfo, 0, SEEK_SET);
 
             while (fgets(linhaDoArquivo, sizeof(linhaDoArquivo) + 1, csvInfo))
@@ -199,7 +197,12 @@ int main(void)
 
 
         case 2:
-            //imprime ABP carregado pelo case 1 em ordem crescente
+          //imprime ABP carregado pelo case 1 em ordem crescente
+            if (flag == 0)
+              {
+                  printf("\nNenhum arquivo carregado!\n\n");
+                  break;
+              }
             printf("\n");
             imprimirLinhas_OrdemCrescente(noPai, posLinhaBytes, csvInfo);
             break;
