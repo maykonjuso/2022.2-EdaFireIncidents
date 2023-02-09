@@ -2,207 +2,196 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define MAX 20000
-
-typedef struct NoDeArvore
+// Criando estrutura do nó
+typedef struct no
 {
-
-    float chave;
     int linha;
-    struct NoDeArvore *esquerda;
-    struct NoDeArvore *direita;
-
+    float chave;
+    struct no *esquerda;
+    struct no *direita;
 } Arvore;
 
-void imprimirLinhas_OrdemCrescente(Arvore *no, long int vetorBytes[], FILE *arquivo)
+// Preenche a ABP em ordem crescente
+Arvore *preencherABP(Arvore *noAtual, long int numLinha, float sumChave)
 {
-
-    int caractere;
-    char linhaFile[850];
-
-    if (no != NULL)
+    if (noAtual == NULL)
     {
-        imprimirLinhas_OrdemCrescente(no->esquerda, vetorBytes, arquivo);
-
-        // fseek(arquivo, vetorBytes[no->linha], SEEK_SET);
-
-        // printf ("%s", fgets(linhaFile, sizeof(linhaFile), arquivo));
-        // while ((caractere = fgetc(arquivo)) != '\n'){
-        //     printf ("%c", caractere);
-        // }
-        // printf("\n");
-        imprimirLinha(vetorBytes[no->linha], arquivo);
-
-        if (no->direita != NULL)
-        {
-            imprimirLinhas_OrdemCrescente(no->direita, vetorBytes, arquivo);
-        }
+        noAtual = (Arvore *)malloc(sizeof(Arvore));
+        noAtual->chave = sumChave;
+        noAtual->linha = numLinha;
+        noAtual->esquerda = NULL;
+        noAtual->direita = NULL;
     }
+    else if (sumChave <= noAtual->chave)
+    {
+        noAtual->esquerda = preencherABP(noAtual->esquerda, numLinha, sumChave);
+    }
+    else
+    {
+        noAtual->direita = preencherABP(noAtual->direita, numLinha, sumChave);
+    }
+    return noAtual;
 }
 
-void removerNos(Arvore *no)
+// desaloca todos os nos da arvore
+void desalocarNo(Arvore *no)
 {
 
     if (no != NULL)
     {
-        removerNos(no->esquerda);
+        desalocarNo(no->esquerda);
 
         if (no->direita != NULL)
         {
-            removerNos(no->direita);
+            desalocarNo(no->direita);
         }
 
         free(no);
     }
 }
 
-void imprimirLinha(long int numBytes, FILE *arquivo)
+// Ordena as chaves em ordem decrescente
+void ordernarChave(char *nomeArquivo, Arvore *no)
 {
+    if (no != NULL)
+    {
+        ordernarChave(nomeArquivo, no->esquerda);
+        printf("chave: %f, linha: %d\n", no->chave, no->linha);
+        imprimir(nomeArquivo, no->linha);
 
-    char linhaFile[850];
-
-    fseek(arquivo, numBytes, SEEK_SET);
-
-    printf("%s", fgets(linhaFile, sizeof(linhaFile), arquivo));
-    printf("\n");
+        ordernarChave(nomeArquivo, no->direita);
+    }
 }
 
-int quantidadeDeLinhas(FILE *ptr_para_file)
+// Imprime a linha do arquivo
+void imprimir(char *nomeArquivo, int numLinha)
 {
-    int numLinhas = 0, letra;
+    FILE *fp;
+    char linha[1024];
+    int linhaAtual = 1;
 
-    while ((letra = fgetc(ptr_para_file)) != EOF)
+    fp = fopen(nomeArquivo, "r");
+    if (fp == NULL)
     {
-        if (letra == '\n')
+        printf("Erro ao abrir o arquivo.\n");
+        exit(1);
+    }
+
+    while (fgets(linha, 1024, fp) != NULL)
+    {
+        if (linhaAtual == numLinha)
         {
-            numLinhas++;
+            printf("%s\n", linha);
+            break;
         }
+        linhaAtual++;
     }
 
-    return numLinhas;
-}
-
-Arvore *registrarABP(Arvore *noPai, long int linhaDeLeitura, float SomaLongitude_Latitude)
-{
-    if (noPai == NULL)
-    {
-        noPai = (Arvore *)malloc(sizeof(Arvore));
-        noPai->chave = SomaLongitude_Latitude;
-        noPai->linha = linhaDeLeitura;
-        noPai->esquerda = NULL;
-        noPai->direita = NULL;
-    }
-    else if (SomaLongitude_Latitude <= noPai->chave)
-    {
-        noPai->esquerda = registrarABP(noPai->esquerda, linhaDeLeitura, SomaLongitude_Latitude);
-    }
-    else
-    {
-        noPai->direita = registrarABP(noPai->direita, linhaDeLeitura, SomaLongitude_Latitude);
-    }
-    return noPai;
+    fclose(fp);
 }
 
 int main(void)
 {
+    // Declarando variáveis
+    FILE *csvFile;
+    Arvore *noAtual = NULL;
+    float chave;
+    char *token;
+    int flag, opcao = 0;
+    char nomeArquivo[100], linhaDoArquivo[1000];
+    long int linhaChave = 1;
 
-    FILE *csvInfo;
-
-    Arvore *noPai = NULL;
-    char nomeArquivo[200];
-    int numLinhas;
-    int nBytes = 0;
-    long int posLinhaBytes[MAX];
-    posLinhaBytes[0] = 0;
-
-    char linhaDoArquivo[850];
-
-    long int localLinha = 1;
-    float somaColunas = 0;
-
-    char *linhaSeparada;
-
-    int escolha = 0;
     do
     {
-        printf("Qual opcao deseja realizar?\n\t1 = Carregar arquivo\n\t2 = Imprimir relatorio\n\t3 = Sair do programa\n");
-        scanf("%d", &escolha);
+        printf("Escolha uma das opcoes abaixo:\n\n\t1 => Carregar arquivo\n\t2 => Imprimir relatorio\n\t3 => Sair do programa\n\n> ");
 
-        switch (escolha)
+        // Lendo opção desejada
+        scanf("%d", &opcao);
+
+        switch (opcao)
         {
         case 1:
 
-            printf("Qual arquivo a ser aberto?\n");
+            printf("\nInsira o nome do arquivo.\n\n> ");
 
             scanf("%s", nomeArquivo);
 
-            csvInfo = fopen(nomeArquivo, "r");
-            if (csvInfo == NULL)
+            csvFile = fopen(nomeArquivo, "r");
+            if (csvFile == NULL)
             {
-                printf("Erro ao abrir arquivo");
+                printf("error 500 - Erro ao abrir arquivo!");
                 exit(1);
             }
 
-            numLinhas = quantidadeDeLinhas(csvInfo);
+            // seta flag como "arquivo aberto"
+            flag = 1;
 
-            fseek(csvInfo, 0, SEEK_SET);
+            // fseek aponta para o inicio do arquivo
+            fseek(csvFile, 0, SEEK_SET);
 
-            while (fgets(linhaDoArquivo, sizeof(linhaDoArquivo) + 1, csvInfo))
+            while (fgets(linhaDoArquivo, sizeof(linhaDoArquivo) + 1, csvFile))
             {
-
-                nBytes = nBytes + strlen(linhaDoArquivo);
-                posLinhaBytes[(localLinha)] = nBytes;
-
-                if (localLinha > 1)
+                if (linhaChave > 1)
                 {
+                    chave = 0;
+                    token = strtok(linhaDoArquivo, ";");
 
-                    somaColunas = 0;
-
-                    linhaSeparada = strtok(linhaDoArquivo, ";");
+                    // Avança para as colunas chaves (latitude, longitude)
                     for (int i = 0; i < 16; i++)
                     {
-                        linhaSeparada = strtok(NULL, ";");
+                        token = strtok(NULL, ";");
                     }
-                    
-                    // // Comando abaixo chega em Latitude
 
-                    linhaSeparada[2] = '.';
-                    somaColunas = strtof(linhaSeparada, NULL);
+                    // Troca virgula por ponto
+                    if (token[0] == '-')
+                        token[3] = '.';
+                    else
+                        token[2] = '.';
 
-                    linhaSeparada = strtok(NULL, ";");
+                    chave = strtof(token, NULL);
+                    token = strtok(NULL, ";");
 
-                    linhaSeparada[2] = '.';
-                    somaColunas += strtof(linhaSeparada, NULL);
+                    if (token[0] == '-')
+                        token[3] = '.';
+                    else
+                        token[2] = '.';
 
-                    noPai = registrarABP(noPai, localLinha, somaColunas);
-                    localLinha++;
+                    chave += strtof(token, NULL);
+
+                    // Preenche ABP
+                    noAtual = preencherABP(noAtual, linhaChave, chave);
+                    linhaChave++;
                 }
-
                 else
                 {
-                    localLinha++;
+                    linhaChave++;
                 }
             }
 
+            printf("\nO Arquivo '%s' foi carregado!\n\n", nomeArquivo);
             break;
 
         case 2:
-            imprimirLinhas_OrdemCrescente(noPai, posLinhaBytes, csvInfo);
+            if (flag == 0)
+            {
+                printf("\nerror 404 - Arquivo Vazio!!!\n\n> ");
+                break;
+            }
+            printf("\n");
+            ordernarChave(nomeArquivo, noAtual);
             break;
 
         case 3:
-            removerNos(noPai);
+            // Desaloca memória alocada
+            desalocarNo(noAtual);
             break;
 
         default:
-            printf("Opcao incorreta");
-            escolha = 0;
+            printf("\nerror 500 - Opcao invalida!\n\n> ");
+            opcao = 0;
             break;
         }
-
-        // Printar - Excluir
-
-    } while (escolha == 0 || escolha == 1 || escolha == 2);
+    } while (opcao == 0 || opcao == 1 || opcao == 2);
 
     return 0;
 }
