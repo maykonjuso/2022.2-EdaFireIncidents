@@ -4,19 +4,18 @@
 #define MAX 20000
 
 //nó da árvore binária
+
 typedef struct NoDeArvore
 {
     float chave;
     int linha;
     struct NoDeArvore *esquerda;
     struct NoDeArvore *direita;
-
 } Arvore;
 
-//função para desalocar o nó
-void removerNos(Arvore *no)
+//função recursiva para desalocar todos os nós da ABP
+void removerNos(Arvore *no) //atenção
 {
-
     if (no != NULL)
     {
         removerNos(no->esquerda);
@@ -35,6 +34,7 @@ void imprimirLinha(long int numBytes, FILE *arquivo)
 {
     char linhaFile[850];
 
+    //fseek é responsável por colocar o indicador de leitura no início do arquivo
     fseek(arquivo, numBytes, SEEK_SET);
 
     printf("%s", fgets(linhaFile, sizeof(linhaFile), arquivo));
@@ -60,23 +60,9 @@ void imprimirLinhas_OrdemCrescente(Arvore *no, long int vetorBytes[], FILE *arqu
     }
 }
 
-//contar quantidade de linhas do arquivo
-int quantidadeDeLinhas(FILE *ptr_para_file)
-{
-    int numLinhas = 0, letra;
 
-    while ((letra = fgetc(ptr_para_file)) != EOF)
-    {
-        if (letra == '\n')
-        {
-            numLinhas++;
-        }
-    }
 
-    return numLinhas;
-}
-
-//criando árvore binária
+//criando nós na árvore binária
 Arvore *registrarABP(Arvore *noPai, long int linhaDeLeitura, float SomaLongitude_Latitude)
 {
     //se o nó atual estiver vazio
@@ -106,9 +92,9 @@ int main(void)
 
     FILE *csvInfo;
 
+    //declara raiz da árvore == NULL
     Arvore *noPai = NULL;
     char nomeArquivo[200];
-    int numLinhas;
     int nBytes = 0;
     long int posLinhaBytes[MAX];
     posLinhaBytes[0] = 0;
@@ -149,7 +135,6 @@ int main(void)
             //seta flag como arquivo aberto
             flag = 1;
           
-            numLinhas = quantidadeDeLinhas(csvInfo);
             fseek(csvInfo, 0, SEEK_SET);
 
             while (fgets(linhaDoArquivo, sizeof(linhaDoArquivo) + 1, csvInfo))
@@ -170,11 +155,10 @@ int main(void)
                         linhaSeparada = strtok(NULL, ";");
                     }
                     
-                    
+                    45.45151616848
 
                     linhaSeparada[2] = '.';
                     somaColunas = strtof(linhaSeparada, NULL);
-
                     linhaSeparada = strtok(NULL, ";");
 
                     linhaSeparada[2] = '.';
