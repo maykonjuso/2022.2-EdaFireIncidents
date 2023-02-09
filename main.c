@@ -137,7 +137,7 @@ int main(void)
                     token = strtok(linhaDoArquivo, ";");
 
                     // Avança para as colunas chaves (latitude, longitude)
-                    for (int i = 0; i < 16; i++)
+                    for (int i = 0; i < 15; i++)
                     {
                         token = strtok(NULL, ";");
                     }
