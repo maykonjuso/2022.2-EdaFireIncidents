@@ -50,7 +50,7 @@ void desalocarNo(Arvore *no)
     }
 }
 
-// Ordena as chaves em ordem decrescente
+// Ordena as chaves em ordem crescente
 void ordernarChave(char *nomeArquivo, Arvore *no)
 {
     if (no != NULL)
