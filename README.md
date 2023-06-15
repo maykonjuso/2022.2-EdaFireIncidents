@@ -1,16 +1,52 @@
-# eda-fire-incidents
+<h1>EDA Fire Incidents</h1>
 
-Aplicação de Árvores Binárias de Pesquisa -
-ABP para Geração de Relatórios Ordenados.
+![UnB](https://github.com/maykonjuso/2022.1-Amicis/assets/89596623/0a192c70-9631-451b-a4ef-eadb2bb892e7)
 
-- 211030863	- Maykon Júnio dos Santos Soares
-- 211041221	- Luan Mateus Cesar Duarte
-- 211031000	- Felipe Figueiredo de Paula
-- 211031735	- Isaac Lucas Souza Bezerra
-- 211030729	- Eric Rabelo Borges
+<p><br></p>
 
-# Grupo C
+<h3><b>Disciplina:</b> Estrutura de dados 1</h3>
+<h3><b>Semestre:</b> 2022.2</h3>
 
-+ Fonte de dados: Fire Incidents
-+ Campo Chave: Latitude + Longitude
+<p><br></p>
 
+<h2>Índice</h2>
+
+- [Objetivos](#objetivos)
+- [Introdução](#introdução)
+- [Tecnologias utilizadas](#tecnologias-utilizadas)
+- [Instalação](#instalação)
+- [Equipe](#equipe)
+
+## Objetivos
+
+Projeto com o objetivo de ordenar a dados relacionados à queimadas em todos os paises, com o intuito de testar conhecimentos de estrutura de dados.
+
+## Introdução
+
+O avanço das tecnologias de informação e comunicação tem proporcionado o acesso a um vasto volume de dados em diferentes áreas, incluindo questões ambientais. Entre os desafios atuais enfrentados pela sociedade global, as queimadas e incêndios florestais têm sido uma preocupação constante devido aos impactos devastadores que causam no meio ambiente, na biodiversidade e na qualidade de vida das populações afetadas.
+
+Com o objetivo de abordar essa problemática, foi concebido um projeto que visa ordenar e estruturar dados relacionados a queimadas em todos os países. Além disso, o projeto busca explorar e testar conhecimentos de estrutura de dados, desenvolvendo soluções eficientes e escaláveis para a organização e análise dessas informações.
+
+A quantidade de dados disponíveis sobre queimadas é vasta e variada, incluindo informações como localização geográfica, datas, áreas afetadas, causas identificadas e medidas de combate adotadas. Através da utilização de estruturas de dados adequadas, é possível armazenar, processar e visualizar esses dados de maneira eficiente, permitindo a identificação de padrões, tendências e insights relevantes para o entendimento e o enfrentamento desse problema global.
+
+Com a aplicação de conhecimentos de estrutura de dados nesse projeto, espera-se contribuir para a construção de soluções mais eficazes no monitoramento, prevenção e mitigação de queimadas, em busca de um futuro mais sustentável e resiliente para o planeta.
+
+## Tecnologias utilizadas
+
+- [C](<https://pt.wikipedia.org/wiki/C_(linguagem_de_programa%C3%A7%C3%A3o)>)
+
+## Instalação
+
+```bash
+$ git clone https://github.com/maykonjuso/2022.2-EdaFireIncidents.git
+$ cd 2022.2-EdaFireIncidents
+```
+
+## Equipe
+
+<a href="#">
+    <img src="https://avatars.githubusercontent.com/u/89596623?v=4" width="100px;" alt="Foto Maykon"/><br>
+    <sub>
+        <b>Maykon Júnio</b>
+    </sub>
+</a>
