@@ -54,9 +54,7 @@ $ cd 2022.2-EdaFireIncidents
 
 ## Equipe
 
-<a href="#">
-    <img src="https://avatars.githubusercontent.com/u/89596623?v=4" width="100px;" alt="Foto Maykon"/><br>
-    <sub>
-        <b>Maykon Júnio</b>
-    </sub>
+<a style="display: flex; flex-direction: column; align-items: center;">
+    <img src="https://avatars.githubusercontent.com/u/89596623?v=4" width="100px;" alt="Foto Maykon"/>
+    <b>Maykon Júnio</b>
 </a>
