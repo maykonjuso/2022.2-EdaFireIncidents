@@ -13,8 +13,8 @@
 <p><br></p>
 
 <p align="center">
-    <h3><b>Disciplina:</b> Estrutura de dados 1</h3>
-    <h3><b>Semestre:</b> 2022.2</h3>
+    <h3 align="center"><b>Disciplina:</b> Estrutura de dados 01</h3>
+    <h3 align="center"><b>Semestre:</b> 2022.2</h3>
 </p>
 
 <p><br></p>
